@@ -1,0 +1,141 @@
+------------------------------------------------------------
+-- 1. Total number of loan applications
+------------------------------------------------------------
+SELECT 
+    COUNT(*) AS Total_Applications
+FROM Loan_Clean;
+
+
+------------------------------------------------------------
+-- 2. Number of approved vs rejected loans
+------------------------------------------------------------
+SELECT 
+    Loan_Status,
+    COUNT(*) AS Total
+FROM Loan_Clean
+GROUP BY Loan_Status;
+
+
+------------------------------------------------------------
+-- 3. Approval rate percentage
+------------------------------------------------------------
+SELECT 
+    ROUND(
+        100.0 * SUM(CASE WHEN Loan_Status = 'Y' THEN 1 ELSE 0 END) / COUNT(*),
+        2
+    ) AS Approval_Rate_Percent
+FROM Loan_Clean;
+
+
+------------------------------------------------------------
+-- 4. Average Loan Amount, Applicant Income, and Coapplicant Income
+------------------------------------------------------------
+SELECT
+    ROUND(AVG(Loan_Amount), 2) AS Avg_Loan_Amount,
+    ROUND(AVG(Applicant_Income), 2) AS Avg_Applicant_Income,
+    ROUND(AVG(Coapplicant_Income), 2) AS Avg_Coapplicant_Income
+FROM Loan_Clean;
+
+
+------------------------------------------------------------
+-- 5. Loan approval count by Property Area
+------------------------------------------------------------
+SELECT
+    Property_Area,
+    COUNT(*) AS Total_Applicants,
+    SUM(CASE WHEN Loan_Status = 'Y' THEN 1 ELSE 0 END) AS Approved
+FROM Loan_Clean
+GROUP BY Property_Area
+ORDER BY Total_Applicants DESC;
+
+
+------------------------------------------------------------
+-- 6. Approval rate by Credit History
+------------------------------------------------------------
+SELECT
+    Credit_History,
+    COUNT(*) AS Total_Applications,
+    SUM(CASE WHEN Loan_Status = 'Y' THEN 1 ELSE 0 END) AS Approved,
+    ROUND(
+        100.0 * SUM(CASE WHEN Loan_Status = 'Y' THEN 1 ELSE 0 END) / COUNT(*),
+        2
+    ) AS Approval_Rate_Percent
+FROM Loan_Clean
+GROUP BY Credit_History;
+
+
+------------------------------------------------------------
+-- 7. Loan amount analysis by Education status
+------------------------------------------------------------
+SELECT
+    Education,
+    ROUND(AVG(Loan_Amount), 2) AS Avg_Loan,
+    ROUND(MAX(Loan_Amount), 2) AS Max_Loan,
+    ROUND(MIN(Loan_Amount), 2) AS Min_Loan
+FROM Loan_Clean
+GROUP BY Education;
+
+
+------------------------------------------------------------
+-- 8. Total income comparison of approved vs rejected loans
+------------------------------------------------------------
+SELECT
+    Loan_Status,
+    ROUND(AVG(Total_Income), 2) AS Avg_Total_Income
+FROM Loan_Clean
+GROUP BY Loan_Status;
+
+
+------------------------------------------------------------
+-- 9. EMI statistics
+------------------------------------------------------------
+SELECT
+    ROUND(AVG(EMI), 2) AS Avg_EMI,
+    ROUND(MAX(EMI), 2) AS Max_EMI,
+    ROUND(MIN(EMI), 2) AS Min_EMI
+FROM Loan_Clean;
+
+
+------------------------------------------------------------
+-- 10. Approval rate by Loan Amount Band
+------------------------------------------------------------
+SELECT
+    Loan_Amount_Band,
+    COUNT(*) AS Total_Applicants,
+    SUM(CASE WHEN Loan_Status = 'Y' THEN 1 ELSE 0 END) AS Approved,
+    ROUND(
+        100.0 * SUM(CASE WHEN Loan_Status = 'Y' THEN 1 ELSE 0 END) / COUNT(*),
+        2
+    ) AS Approval_Rate_Percent
+FROM Loan_Clean
+GROUP BY Loan_Amount_Band
+ORDER BY Loan_Amount_Band;
+
+
+------------------------------------------------------------
+-- 11. Approval count by Dependents
+------------------------------------------------------------
+SELECT
+    Dependents,
+    COUNT(*) AS Total_Applications,
+    SUM(CASE WHEN Loan_Status = 'Y' THEN 1 ELSE 0 END) AS Approved
+FROM Loan_Clean
+GROUP BY Dependents
+ORDER BY Dependents;
+
+
+------------------------------------------------------------
+-- 12. EMI and approval rate by Income Band
+------------------------------------------------------------
+SELECT
+    "Income_Band",
+    COUNT(*) AS Total_Applications,
+    ROUND(AVG(EMI), 2) AS Avg_EMI,
+    SUM(CASE WHEN Loan_Status = 'Y' THEN 1 ELSE 0 END) AS Approved_Applications,
+    ROUND(
+        100.0 * SUM(CASE WHEN Loan_Status = 'Y' THEN 1 ELSE 0 END) / COUNT(*),
+        2
+    ) AS Approval_Rate_Percent
+FROM Loan_Clean
+GROUP BY "Income_Band"
+ORDER BY "Income_Band";
